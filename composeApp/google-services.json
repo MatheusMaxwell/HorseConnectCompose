@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "178488255006",
+    "project_id": "horseconnect-86e73",
+    "storage_bucket": "horseconnect-86e73.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178488255006:android:390d878d0faa88695c040f",
+        "android_client_info": {
+          "package_name": "br.com.horseconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "178488255006-94d2gkt7q2fnda8097qai1ar2d7okol5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDx9my9rUO8nckr3Tp1m97DVPKRRH2YF6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "178488255006-94d2gkt7q2fnda8097qai1ar2d7okol5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "178488255006-o6jngnfhm2pfgkv1b1k1p2rn6ot7sbak.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.matheusmaxwell.HorseConnect"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178488255006:android:0305f319255c43c85c040f",
+        "android_client_info": {
+          "package_name": "com.horseconnect.projects"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "178488255006-94d2gkt7q2fnda8097qai1ar2d7okol5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDx9my9rUO8nckr3Tp1m97DVPKRRH2YF6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "178488255006-94d2gkt7q2fnda8097qai1ar2d7okol5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "178488255006-o6jngnfhm2pfgkv1b1k1p2rn6ot7sbak.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.matheusmaxwell.HorseConnect"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
