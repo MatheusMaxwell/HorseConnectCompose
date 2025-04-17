@@ -6,4 +6,5 @@ import br.com.horseconnect.impl.domain.model.Image
 interface ImageDataSource {
 
     suspend fun uploadImage(image: ByteArray): ResponseResult<Image>
+    suspend fun deleteImage(imageId: String): ResponseResult<Unit>
 }

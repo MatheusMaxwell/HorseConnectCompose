@@ -26,7 +26,7 @@ fun PrimaryButton(
     onClick: () -> Unit
 ){
     Button(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         onClick = onClick,
         enabled = enabled,
         shape = RoundedCornerShape(10.dp),

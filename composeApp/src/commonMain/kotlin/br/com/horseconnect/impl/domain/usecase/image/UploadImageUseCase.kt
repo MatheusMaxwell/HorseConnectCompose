@@ -1,8 +1,7 @@
-package br.com.horseconnect.impl.domain.usecase
+package br.com.horseconnect.impl.domain.usecase.image
 
 import br.com.horseconnect.common.base.usecase.BaseUseCase
 import br.com.horseconnect.common.error.CommonErrors
-import br.com.horseconnect.common.error.GenericError
 import br.com.horseconnect.common.result.ResponseResult
 import br.com.horseconnect.impl.data.repository.image.ImageRepository
 import br.com.horseconnect.impl.domain.model.Image

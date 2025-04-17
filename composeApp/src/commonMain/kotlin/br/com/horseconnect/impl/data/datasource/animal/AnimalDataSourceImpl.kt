@@ -88,4 +88,22 @@ class AnimalDataSourceImpl : AnimalDataSource {
             ResponseResult.Error(e.toGenericError())
         }
     }
+
+    override suspend fun updateAnimal(animal: AnimalData, animalId: String): ResponseResult<Unit> {
+        return try {
+            db.collection(ANIMALS_COLLECTION).document(animalId).set(animal)
+            ResponseResult.Success(Unit)
+        } catch (e: Exception) {
+            ResponseResult.Error(e.toGenericError())
+        }
+    }
+
+    override suspend fun deleteAnimal(animalId: String): ResponseResult<Unit> {
+        return try {
+            db.collection(ANIMALS_COLLECTION).document(animalId).delete()
+            ResponseResult.Success(Unit)
+        } catch (e: Exception) {
+            ResponseResult.Error(e.toGenericError())
+        }
+    }
 }

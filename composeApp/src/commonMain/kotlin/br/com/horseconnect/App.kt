@@ -9,6 +9,7 @@ import br.com.horseconnect.common.manager.SessionManager
 import br.com.horseconnect.common.toastprovider.LocalToasterDialog
 import br.com.horseconnect.impl.data.mapper.toDomain
 import br.com.horseconnect.impl.di.appModule
+import br.com.horseconnect.impl.domain.model.Animal
 import br.com.horseconnect.impl.presentation.animals.detail.AnimalDetailScreen
 import br.com.horseconnect.impl.presentation.animals.genealogy.GenealogyScreen
 import br.com.horseconnect.impl.presentation.animals.list.AnimalListScreen
@@ -30,6 +31,8 @@ import com.dokar.sonner.Toaster
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import okio.FileSystem
 import org.koin.compose.KoinApplication
 
@@ -52,7 +55,7 @@ data class AnimalDetail(val animalId: String)
 data class Genealogy(val animalId: String, val animalName: String)
 
 @Serializable
-object Register
+data class Register(val animal: String? = null)
 
 @Composable
 fun App() {
@@ -103,7 +106,7 @@ fun App() {
                             navController.navigate(route = AnimalDetail(it))
                         },
                         navigateToRegister = {
-                            navController.navigate(route = Register)
+                            navController.navigate(route = Register())
                         },
                         popBackStack = { navController.popBackStack() }
                     )
@@ -117,6 +120,10 @@ fun App() {
                         },
                         navigateToGenealogy = { animalId, animalName ->
                             navController.navigate(route = Genealogy(animalId, animalName))
+                        },
+                        navigateToEdit = {
+                            val animalJson = Json.encodeToString(it)
+                            navController.navigate(route = Register(animal = animalJson))
                         }
                     )
                 }
@@ -132,7 +139,12 @@ fun App() {
                     )
                 }
                 composable<Register> {
+                    var animal: Animal? = null
+                    it.arguments?.getString("animal")?.let { json ->
+                        animal = Json.decodeFromString<Animal>(json)
+                    }
                     AnimalRegisterScreen(
+                        currentAnimal = animal,
                         popBackStack = {
                             navController.popBackStack()
                         }

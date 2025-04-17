@@ -39,7 +39,7 @@ object DateUtil {
         if (value.isNotEmpty()) {
             val dateTime = Instant.parse(value)
             val date = dateTime.toLocalDateTime(TimeZone.currentSystemDefault())
-            return "${date.dayOfMonth}/${date.monthNumber}/${date.year}"
+            return "${date.dayOfMonth.toString().padStart(2, '0')}/${date.monthNumber.toString().padStart(2, '0')}/${date.year}"
         } else {
             return value
         }

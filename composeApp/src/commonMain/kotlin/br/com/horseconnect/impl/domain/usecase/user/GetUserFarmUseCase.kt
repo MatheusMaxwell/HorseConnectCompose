@@ -1,4 +1,4 @@
-package br.com.horseconnect.impl.domain.usecase
+package br.com.horseconnect.impl.domain.usecase.user
 
 import br.com.horseconnect.common.base.usecase.BaseUseCase
 import br.com.horseconnect.common.result.ResponseResult

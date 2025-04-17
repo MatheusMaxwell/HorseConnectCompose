@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import br.com.horseconnect.common.manager.SessionManager
 import br.com.horseconnect.common.result.ResponseResult
 import br.com.horseconnect.impl.domain.model.User
-import br.com.horseconnect.impl.domain.usecase.DoLoginParams
-import br.com.horseconnect.impl.domain.usecase.DoLoginUseCase
+import br.com.horseconnect.impl.domain.usecase.user.DoLoginParams
+import br.com.horseconnect.impl.domain.usecase.user.DoLoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

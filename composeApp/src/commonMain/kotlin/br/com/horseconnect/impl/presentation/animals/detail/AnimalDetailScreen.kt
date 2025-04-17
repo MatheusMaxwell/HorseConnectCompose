@@ -12,7 +12,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun AnimalDetailScreen(
     animalId: String,
     popBackStack: () -> Unit,
-    navigateToGenealogy: (animalId: String, animalName: String) -> Unit
+    navigateToGenealogy: (animalId: String, animalName: String) -> Unit,
+    navigateToEdit: (animal: Animal) -> Unit
 ){
     val viewModel = koinViewModel<AnimalDetailViewModel>()
     val viewState by viewModel.animalState.collectAsStateWithLifecycle()
@@ -21,6 +22,8 @@ fun AnimalDetailScreen(
         viewState = viewState,
         getCurrentAnimal = { viewModel.getAnimalById(animalId) },
         popBackStack = popBackStack,
-        navigateToGenealogy = navigateToGenealogy
+        navigateToGenealogy = navigateToGenealogy,
+        deleteAnimal = viewModel::deleteAnimal,
+        navigateToEditAnimal = navigateToEdit
     )
 }

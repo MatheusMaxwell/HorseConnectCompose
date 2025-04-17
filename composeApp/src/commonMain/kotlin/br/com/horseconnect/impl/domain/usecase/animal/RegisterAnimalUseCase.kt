@@ -1,17 +1,17 @@
-package br.com.horseconnect.impl.domain.usecase
+package br.com.horseconnect.impl.domain.usecase.animal
 
 import br.com.horseconnect.common.base.usecase.BaseUseCase
 import br.com.horseconnect.common.error.CommonErrors
 import br.com.horseconnect.common.result.ResponseResult
 import br.com.horseconnect.impl.data.repository.animal.AnimalRepository
-import br.com.horseconnect.impl.domain.model.Genealogy
+import br.com.horseconnect.impl.domain.model.Animal
 
-class GetGenealogyByAnimalIdUseCase(
+class RegisterAnimalUseCase(
     private val repository: AnimalRepository
-): BaseUseCase<String, Genealogy> {
-    override suspend fun invoke(params: String?): ResponseResult<Genealogy> {
+): BaseUseCase<Animal, Unit> {
+    override suspend fun invoke(params: Animal?): ResponseResult<Unit> {
         return params?.let {
-            repository.getAnimalGenealogyByAnimalId(it)
+            repository.registerAnimal(it)
         } ?: ResponseResult.Error(CommonErrors.UnknownError())
     }
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.horseconnect.common.result.ResponseResult
 import br.com.horseconnect.impl.domain.model.Genealogy
-import br.com.horseconnect.impl.domain.usecase.GetGenealogyByAnimalIdUseCase
+import br.com.horseconnect.impl.domain.usecase.animal.GetGenealogyByAnimalIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

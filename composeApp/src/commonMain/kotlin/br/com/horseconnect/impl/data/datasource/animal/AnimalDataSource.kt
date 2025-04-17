@@ -11,4 +11,6 @@ interface AnimalDataSource {
     suspend fun getAnimalById(animalId: String): ResponseResult<Animal>
     suspend fun getAnimalGenealogyByAnimalId(animalId: String): ResponseResult<Genealogy>
     suspend fun registerAnimal(animal: AnimalData): ResponseResult<Unit>
+    suspend fun updateAnimal(animal: AnimalData, animalId: String): ResponseResult<Unit>
+    suspend fun deleteAnimal(animalId: String): ResponseResult<Unit>
 }

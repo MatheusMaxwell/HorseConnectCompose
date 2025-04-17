@@ -86,7 +86,7 @@ internal fun LoginContent(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 PrimaryButton(
-                    modifier = Modifier.padding(Padding.large),
+                    modifier = Modifier.fillMaxWidth().padding(Padding.large),
                     text = "Entrar"
                 ){
                     doLogin.invoke(email, password)

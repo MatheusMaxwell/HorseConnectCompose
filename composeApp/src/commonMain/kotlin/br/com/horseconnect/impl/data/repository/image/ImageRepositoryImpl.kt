@@ -10,4 +10,8 @@ class ImageRepositoryImpl(
     override suspend fun uploadImage(image: ByteArray): ResponseResult<Image> {
         return dataSource.uploadImage(image)
     }
+
+    override suspend fun deleteImage(imageId: String): ResponseResult<Unit> {
+        return dataSource.deleteImage(imageId)
+    }
 }

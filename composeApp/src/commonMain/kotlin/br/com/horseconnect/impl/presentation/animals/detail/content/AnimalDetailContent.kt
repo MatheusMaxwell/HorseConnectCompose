@@ -2,16 +2,22 @@ package br.com.horseconnect.impl.presentation.animals.detail.content
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import br.com.horseconnect.common.toastprovider.LocalToasterDialog
 import br.com.horseconnect.common.util.DateUtil
@@ -34,6 +41,10 @@ import br.com.horseconnect.impl.domain.model.Owner
 import br.com.horseconnect.impl.presentation.animals.detail.AnimalDetailViewState
 import br.com.horseconnect.theme.color.HorseColor
 import br.com.horseconnect.theme.components.button.PrimaryButton
+import br.com.horseconnect.theme.components.button.SecondaryButton
+import br.com.horseconnect.theme.components.dialog.ConfirmAction
+import br.com.horseconnect.theme.components.dialog.CustomDialog
+import br.com.horseconnect.theme.components.dialog.DismissAction
 import br.com.horseconnect.theme.components.expandablelist.ExpandableList
 import br.com.horseconnect.theme.components.expandablelist.Item
 import br.com.horseconnect.theme.components.loading.provider.LocalLoadingDialog
@@ -48,11 +59,14 @@ fun AnimalDetailContent(
     viewState: AnimalDetailViewState,
     getCurrentAnimal: () -> Unit,
     popBackStack: () -> Unit,
-    navigateToGenealogy: (animalId: String, animalName: String) -> Unit
+    navigateToGenealogy: (animalId: String, animalName: String) -> Unit,
+    deleteAnimal: (Animal) -> Unit,
+    navigateToEditAnimal: (animal: Animal) -> Unit
 ) {
     var animal: Animal? by remember { mutableStateOf(null) }
     val toaster = LocalToasterDialog.current
     val loading = LocalLoadingDialog.current
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit){
         getCurrentAnimal.invoke()
@@ -72,8 +86,22 @@ fun AnimalDetailContent(
             AnimalDetailViewState.Loading -> {
                 loading.show()
             }
+            AnimalDetailViewState.DeletedSuccess -> {
+                loading.hide()
+                toaster.show("Animal deletado com sucesso.")
+                popBackStack.invoke()
+            }
         }
     }
+
+    DeleteAnimalDialog(
+        showDeleteDialog = showDeleteDialog,
+        onDismiss = { showDeleteDialog = false },
+        onConfirmDelete = {
+            deleteAnimal.invoke(animal!!)
+        }
+    )
+
 
     Scaffold(
         topBar = {
@@ -88,12 +116,23 @@ fun AnimalDetailContent(
         Column(
             modifier = Modifier.fillMaxSize().padding(Padding.medium)
         ) {
-            Text(
-                modifier = Modifier.fillMaxWidth().padding(bottom = Padding.medium),
-                text = animal?.name.orEmpty(),
-                style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
-                textAlign = TextAlign.Center
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(bottom = Padding.medium)
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = animal?.name.orEmpty(),
+                    style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                    textAlign = TextAlign.Center
+                )
+                Icon(
+                    modifier = Modifier.clickable {
+                        animal?.let { navigateToEditAnimal.invoke(it) }
+                    },
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = "Editar"
+                )
+            }
             AsyncImage(
                 model = animal?.imageUrl,
                 contentDescription = animal?.name,
@@ -114,19 +153,46 @@ fun AnimalDetailContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 PrimaryButton(
-                    modifier = Modifier.padding(Padding.medium),
+                    modifier = Modifier.fillMaxWidth().padding(Padding.medium),
                     text = "Genealogia"
                 ){
                     navigateToGenealogy.invoke(animal?.id.orEmpty(), animal?.name.orEmpty())
                 }
                 Text(
-                    "Excluir animal",
-                    style = TextStyle(color = Color.Red),
-                    modifier = Modifier.clickable {  }
+                    text = "Excluir animal",
+                    modifier = Modifier
+                        .clickable { showDeleteDialog = true }
+                        .padding(8.dp),
+                    style = TextStyle(
+                        color = Color.Red,
+                        textDecoration = TextDecoration.Underline
+                    )
                 )
             }
         }
     }
+}
+
+@Composable
+fun DeleteAnimalDialog(
+    showDeleteDialog: Boolean,
+    onDismiss: () -> Unit,
+    onConfirmDelete: () -> Unit
+) {
+    CustomDialog(
+        visible = showDeleteDialog,
+        title = "Excluir animal",
+        message = "Tem certeza que deseja excluir este animal?",
+        onDismiss = onDismiss,
+        confirmAction = ConfirmAction(
+            text = "Sim",
+            onClick = onConfirmDelete
+        ),
+        dismissAction = DismissAction(
+            text = "Não",
+            onClick = onDismiss
+        )
+    )
 }
 
 @Composable
@@ -149,6 +215,8 @@ private fun AnimalDetailContentPreview() {
         ),
         getCurrentAnimal = {},
         popBackStack = {},
-        navigateToGenealogy = { _, _ -> }
+        navigateToGenealogy = { _, _ -> },
+        deleteAnimal = {},
+        navigateToEditAnimal = {}
     )
 }

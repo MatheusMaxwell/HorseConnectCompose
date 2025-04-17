@@ -25,4 +25,11 @@ class AnimalRepositoryImpl(
     override suspend fun registerAnimal(animal: Animal): ResponseResult<Unit> {
         return dataSource.registerAnimal(animal.toData())
     }
+    override suspend fun updateAnimal(animal: Animal): ResponseResult<Unit> {
+        return dataSource.updateAnimal(animal.toData(), animal.id)
+    }
+    override suspend fun deleteAnimal(animalId: String): ResponseResult<Unit> {
+        return dataSource.deleteAnimal(animalId)
+    }
+
 }

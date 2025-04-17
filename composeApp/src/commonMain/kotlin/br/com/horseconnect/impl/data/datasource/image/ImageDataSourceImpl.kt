@@ -26,4 +26,14 @@ class ImageDataSourceImpl : ImageDataSource {
             ResponseResult.Error(e.toGenericError())
         }
     }
+
+    override suspend fun deleteImage(imageId: String): ResponseResult<Unit> {
+        return try {
+            val ref = Firebase.storage.reference.child("images/${imageId}.png")
+            ref.delete()
+            ResponseResult.Success(Unit)
+        } catch (e: Exception) {
+            ResponseResult.Error(e.toGenericError())
+        }
+    }
 }

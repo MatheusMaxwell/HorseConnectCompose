@@ -4,13 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.horseconnect.common.result.ResponseResult
 import br.com.horseconnect.impl.domain.model.Animal
-import br.com.horseconnect.impl.domain.usecase.GetAnimalByIdUseCase
+import br.com.horseconnect.impl.domain.usecase.animal.DeleteAnimalUseCase
+import br.com.horseconnect.impl.domain.usecase.animal.GetAnimalByIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class AnimalDetailViewModel(
-    private val getAnimalById: GetAnimalByIdUseCase
+    private val getAnimalById: GetAnimalByIdUseCase,
+    private val deleteAnimalUseCase: DeleteAnimalUseCase
 ): ViewModel() {
 
     private val _animalState: MutableStateFlow<AnimalDetailViewState> = MutableStateFlow(
@@ -33,6 +35,20 @@ class AnimalDetailViewModel(
             }
         }
     }
+
+    fun deleteAnimal(animal: Animal) {
+        _animalState.tryEmit(AnimalDetailViewState.Loading)
+        viewModelScope.launch {
+            when(val result = deleteAnimalUseCase.invoke(animal)) {
+                is ResponseResult.Success -> {
+                    _animalState.tryEmit(AnimalDetailViewState.DeletedSuccess)
+                }
+                is ResponseResult.Error -> {
+                    _animalState.tryEmit(AnimalDetailViewState.Error(result.resultError.msg))
+                }
+            }
+        }
+    }
 }
 
 sealed class AnimalDetailViewState() {
@@ -40,4 +56,5 @@ sealed class AnimalDetailViewState() {
     data object Loading : AnimalDetailViewState()
     data class Error(val msg: String) : AnimalDetailViewState()
     data class Populated(val data: Animal) : AnimalDetailViewState()
+    data object DeletedSuccess: AnimalDetailViewState()
 }

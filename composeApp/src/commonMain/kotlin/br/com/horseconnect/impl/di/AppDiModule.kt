@@ -16,13 +16,16 @@ import br.com.horseconnect.impl.data.repository.image.ImageRepository
 import br.com.horseconnect.impl.data.repository.image.ImageRepositoryImpl
 import br.com.horseconnect.impl.data.repository.user.UserRepository
 import br.com.horseconnect.impl.data.repository.user.UserRepositoryImpl
-import br.com.horseconnect.impl.domain.usecase.DoLoginUseCase
-import br.com.horseconnect.impl.domain.usecase.GetAnimalByIdUseCase
-import br.com.horseconnect.impl.domain.usecase.GetAnimalsUseCase
-import br.com.horseconnect.impl.domain.usecase.GetGenealogyByAnimalIdUseCase
-import br.com.horseconnect.impl.domain.usecase.GetUserFarmUseCase
-import br.com.horseconnect.impl.domain.usecase.RegisterAnimalUseCase
-import br.com.horseconnect.impl.domain.usecase.UploadImageUseCase
+import br.com.horseconnect.impl.domain.usecase.animal.DeleteAnimalUseCase
+import br.com.horseconnect.impl.domain.usecase.user.DoLoginUseCase
+import br.com.horseconnect.impl.domain.usecase.animal.GetAnimalByIdUseCase
+import br.com.horseconnect.impl.domain.usecase.animal.GetAnimalsUseCase
+import br.com.horseconnect.impl.domain.usecase.animal.GetGenealogyByAnimalIdUseCase
+import br.com.horseconnect.impl.domain.usecase.user.GetUserFarmUseCase
+import br.com.horseconnect.impl.domain.usecase.animal.RegisterAnimalUseCase
+import br.com.horseconnect.impl.domain.usecase.animal.UpdateAnimalUseCase
+import br.com.horseconnect.impl.domain.usecase.image.DeleteImageUseCase
+import br.com.horseconnect.impl.domain.usecase.image.UploadImageUseCase
 import br.com.horseconnect.impl.presentation.animals.detail.AnimalDetailViewModel
 import br.com.horseconnect.impl.presentation.animals.genealogy.GenealogyViewModel
 import br.com.horseconnect.impl.presentation.animals.list.AnimalsListViewModel
@@ -93,6 +96,23 @@ val appModule = module {
         RegisterAnimalUseCase(repository = get())
     }
 
+    single {
+        UpdateAnimalUseCase(repository = get())
+    }
+
+    single {
+        DeleteImageUseCase(
+            imageRepository = get()
+        )
+    }
+
+    single {
+        DeleteAnimalUseCase(
+            animalRepository = get(),
+            imageRepository = get()
+        )
+    }
+
     viewModel {
         LoginViewModel(
             doLoginUseCase = get()
@@ -114,7 +134,8 @@ val appModule = module {
 
     viewModel {
         AnimalDetailViewModel(
-            getAnimalById = get()
+            getAnimalById = get(),
+            deleteAnimalUseCase = get()
         )
     }
 
@@ -127,7 +148,9 @@ val appModule = module {
     viewModel {
         AnimalRegisterViewModel(
             uploadImageUseCase = get(),
-            registerAnimalUseCase = get()
+            registerAnimalUseCase = get(),
+            updateAnimalUseCase = get(),
+            deleteImageUseCase = get()
         )
     }
 }
