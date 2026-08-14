@@ -17,7 +17,7 @@ import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
-import br.com.horseconnect.impl.domain.model.AnimalType
+import br.com.horseconnect.theme.HorseTheme
 import br.com.horseconnect.theme.color.HorseColor
 import br.com.horseconnect.theme.dimens.padding.Padding
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -29,35 +29,34 @@ fun BarChart(
     data: List<BarData>,
     modifier: Modifier = Modifier
 ) {
-    val maxValue = AnimalType.entries.size
-    val maxHeight = 300f // Definindo uma altura máxima fixa para o gráfico
+    val maxValue = (data.maxOfOrNull { it.value } ?: 1f).coerceAtLeast(1f)
+    val barCount = data.size.coerceAtLeast(1)
     // Criando o TextMeasurer
     val textMeasurer: TextMeasurer = rememberTextMeasurer()
 
     Column {
         Canvas(modifier = modifier.fillMaxWidth().height(200.dp).padding(start = Padding.small)) {
-            val barWidth = size.width / maxValue
+            val slotWidth = size.width / barCount
             val barSpacing = 12f
+            val barWidth = (slotWidth - barSpacing * 2).coerceAtLeast(1f)
 
             // Estilo para o texto
             val textStyle = TextStyle(
-                color = Color.Black, // Cor do texto
+                color = HorseColor.textPrimary, // Cor do texto
                 fontSize = 12.sp, // Tamanho da fonte
                 fontFamily = FontFamily.Default // Família da fonte
             )
 
             // Desenhando as barras
             data.forEachIndexed { index, bar ->
-                val left = barWidth * index + barSpacing
-                val right = left + barWidth - barSpacing
+                val left = slotWidth * index + barSpacing
 
                 // Garantindo que a posição "top" não fique negativa
                 val top = maxOf(0f, size.height - (bar.value / maxValue * size.height + 1))
                 val bottom = size.height
-                val barWidth = size.width / maxValue - barSpacing * maxValue
 
                 drawRoundRect(
-                    color = HorseColor.primary,
+                    color = HorseColor.accent,
                     topLeft = androidx.compose.ui.geometry.Offset(left, top),
                     size = androidx.compose.ui.geometry.Size(barWidth, bottom - top),
                     cornerRadius = CornerRadius(20f),
@@ -71,7 +70,7 @@ fun BarChart(
                 val textLayoutResult = textMeasurer.measure(text, style = textStyle)
 
                 // Garantindo que a posição "top" para o texto dos valores não ultrapasse o limite superior
-                val offsetX = barWidth * index + barSpacing * 4
+                val offsetX = slotWidth * index + barSpacing
                 val offsetY = maxOf(0f, size.height - (bar.value / maxValue * size.height)) - 50
 
                 // Desenhando o valor
@@ -93,6 +92,7 @@ fun BarChart(
                 Text(
                     modifier = Modifier,
                     text = barData.name,
+                    color = HorseColor.textSecondary,
                     fontSize = 10.sp
                 )
             }
@@ -125,5 +125,7 @@ fun BarChartScreen() {
 @Preview
 @Composable
 fun PreviewBarChart() {
-    BarChartScreen()
+    HorseTheme {
+        BarChartScreen()
+    }
 }

@@ -32,4 +32,7 @@ class AnimalRepositoryImpl(
         return dataSource.deleteAnimal(animalId)
     }
 
+    override suspend fun updateGenealogy(genealogy: Genealogy): ResponseResult<Unit> {
+        return dataSource.updateGenealogy(genealogy.toData(), genealogy.id)
+    }
 }

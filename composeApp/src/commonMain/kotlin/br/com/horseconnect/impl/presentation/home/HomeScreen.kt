@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.horseconnect.impl.domain.model.Animal
+import br.com.horseconnect.impl.domain.model.Pregnancy
 import br.com.horseconnect.impl.domain.model.User
 import br.com.horseconnect.impl.presentation.home.content.HomeContent
 import br.com.horseconnect.theme.color.HorseColor
@@ -17,7 +18,13 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun HomeScreen(
-    onClickAnimals: () -> Unit
+    onClickAnimals: () -> Unit,
+    navigateToPregnancyList: () -> Unit,
+    navigateToPregnancyDetail: (Pregnancy) -> Unit,
+    navigateToVaccineList: () -> Unit,
+    navigateToFinance: () -> Unit,
+    navigateToNotifications: () -> Unit,
+    navigateToSplashScreen: () -> Unit
 ) {
     val homeViewModel = koinViewModel<HomeViewModel>()
     val homeViewState by homeViewModel.homeState.collectAsStateWithLifecycle()
@@ -27,6 +34,13 @@ internal fun HomeScreen(
         loadInitialData = homeViewModel::loadInitialData,
         loadingDialogManager = loadingDialog,
         viewState = homeViewState,
-        onClickAnimals = onClickAnimals
+        onClickAnimals = onClickAnimals,
+        navigateToPregnancyList = navigateToPregnancyList,
+        navigateToPregnancyDetail = navigateToPregnancyDetail,
+        navigateToVaccineList = navigateToVaccineList,
+        navigateToFinance = navigateToFinance,
+        navigateToNotifications = navigateToNotifications,
+        onLogout = homeViewModel::logout,
+        navigateToSplashScreen = navigateToSplashScreen
     )
 }

@@ -79,4 +79,36 @@ object DateUtil {
         // Retorna a data formatada como dd/MM/yyyy
         return "$day/$month/$year"
     }
+
+    fun calculateBirthForecast(date: String): String {
+        val instant = Instant.parse(date)
+        val dateBirth = instant.plus(340, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
+        val dateTime = dateBirth.toLocalDateTime(TimeZone.currentSystemDefault())
+
+        return "${dateTime.dayOfMonth.toString().padStart(2, '0')}/${dateTime.monthNumber.toString().padStart(2, '0')}/${dateTime.year}"
+    }
+
+    fun addDays(date: String, days: Int): String {
+        val instant = Instant.parse(date)
+        return instant.plus(days, DateTimeUnit.DAY, TimeZone.currentSystemDefault()).toString()
+    }
+
+    fun addMonths(date: String, months: Int): String {
+        val instant = Instant.parse(date)
+        return instant.plus(months, DateTimeUnit.MONTH, TimeZone.currentSystemDefault()).toString()
+    }
+
+    fun now(): String {
+        return Clock.System.now().toString()
+    }
+
+    fun isCurrentMonth(date: String): Boolean {
+        val target = Instant.parse(date).toLocalDateTime(TimeZone.currentSystemDefault())
+        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        return target.year == now.year && target.monthNumber == now.monthNumber
+    }
+
+    fun isPastOrToday(date: String): Boolean {
+        return Instant.parse(date) <= Clock.System.now()
+    }
 }

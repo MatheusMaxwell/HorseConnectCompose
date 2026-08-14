@@ -12,5 +12,5 @@ internal interface UserRepository {
 
     suspend fun getCurrentUser(): User?
 
-    suspend fun logout()
+    suspend fun logout(): ResponseResult<Unit>
 }

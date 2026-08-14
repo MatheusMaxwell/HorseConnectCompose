@@ -2,7 +2,6 @@ package br.com.horseconnect.theme.components.button
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -11,9 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
+import br.com.horseconnect.theme.HorseTheme
 import br.com.horseconnect.theme.color.HorseColor
 import br.com.horseconnect.theme.dimens.padding.Padding
+import br.com.horseconnect.theme.dimens.shape.Shape
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -21,15 +21,15 @@ fun PrimaryButton(
     text: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    bgColor: Color = HorseColor.primary,
-    textColor: Color = Color.White,
+    bgColor: Color = HorseColor.accent,
+    textColor: Color = HorseColor.onAccent,
     onClick: () -> Unit
 ){
     Button(
         modifier = modifier,
         onClick = onClick,
         enabled = enabled,
-        shape = RoundedCornerShape(10.dp),
+        shape = Shape.medium,
         colors = ButtonDefaults.buttonColors(backgroundColor = bgColor)
     ){
         Text(
@@ -43,5 +43,7 @@ fun PrimaryButton(
 @Preview
 @Composable
 private fun PrimaryButtonPreview() {
-    PrimaryButton("Button"){}
+    HorseTheme {
+        PrimaryButton("Button"){}
+    }
 }

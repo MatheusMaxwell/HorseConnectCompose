@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -65,6 +66,7 @@ import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
+import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.ImageRequest
 import com.preat.peekaboo.image.picker.ResizeOptions
 import com.preat.peekaboo.image.picker.SelectionMode
@@ -108,7 +110,9 @@ fun AnimalRegisterContent(
     val context = LocalPlatformContext.current
 
     LaunchedEffect(currentAnimal?.imageUrl) {
-        val imageLoader = ImageLoader(context)
+        val imageLoader = ImageLoader.Builder(context)
+            .components { add(KtorNetworkFetcherFactory()) }
+            .build()
         val request = ImageRequest
             .Builder(context)
             .data(currentAnimal?.imageUrl.orEmpty())
@@ -150,7 +154,7 @@ fun AnimalRegisterContent(
         },
         bottomBar = {
             Box(
-                modifier = Modifier.padding(Padding.medium).background(Color.White)
+                modifier = Modifier.imePadding().padding(Padding.medium).background(HorseColor.background)
             ){
                 PrimaryButton(
                     text = "Finalizar",
@@ -196,10 +200,11 @@ fun AnimalRegisterContent(
     ) {
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
                 .fillMaxSize()
-                .padding(Padding.medium)
-                .padding(bottom = 80.dp),
+                .imePadding()
+                .padding(bottom = 80.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(Padding.medium),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Image(image = image, containsUrl = currentAnimal?.imageUrl?.isNotEmpty() == true) {
@@ -336,8 +341,8 @@ fun AnimalRegisterContent(
                         steps = 20,
                         modifier = Modifier.weight(1f),
                         colors = SliderDefaults.colors(
-                            thumbColor = HorseColor.primary,
-                            activeTrackColor = HorseColor.primary
+                            thumbColor = HorseColor.accent,
+                            activeTrackColor = HorseColor.accent
                         )
                     )
 
@@ -397,20 +402,20 @@ private fun Image(image: ByteArray?, containsUrl: Boolean, updateImage: (ByteArr
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
-                    .background(Color.LightGray, shape = MaterialTheme.shapes.medium)
+                    .background(HorseColor.surfaceVariant, shape = MaterialTheme.shapes.medium)
             )
         } else {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
-                    .background(Color.LightGray, shape = MaterialTheme.shapes.medium),
+                    .background(HorseColor.surfaceVariant, shape = MaterialTheme.shapes.medium),
                 contentAlignment = Alignment.Center
             ) {
                 if (containsUrl) {
-                    CircularProgressIndicator(color = HorseColor.primary)
+                    CircularProgressIndicator(color = HorseColor.accent)
                 } else {
-                    Text("Clique para selecionar uma imagem")
+                    Text("Clique para selecionar uma imagem", color = HorseColor.textSecondary)
                 }
             }
         }

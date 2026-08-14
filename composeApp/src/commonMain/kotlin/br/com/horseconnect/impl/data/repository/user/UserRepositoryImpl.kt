@@ -18,5 +18,5 @@ internal class UserRepositoryImpl(
     }
     override suspend fun isAuthenticated(): Boolean = dataSource.isAuthenticated()
     override suspend fun getCurrentUser(): User? = dataSource.getCurrentUser()?.toDomain()
-    override suspend fun logout() = dataSource.logout()
+    override suspend fun logout(): ResponseResult<Unit> = dataSource.logout()
 }

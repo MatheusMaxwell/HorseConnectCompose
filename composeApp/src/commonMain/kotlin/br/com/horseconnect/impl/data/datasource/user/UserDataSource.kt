@@ -11,6 +11,6 @@ internal interface UserDataSource {
 
     suspend fun getCurrentUser(): FirebaseUser?
 
-    suspend fun logout()
+    suspend fun logout(): ResponseResult<Unit>
 
 }

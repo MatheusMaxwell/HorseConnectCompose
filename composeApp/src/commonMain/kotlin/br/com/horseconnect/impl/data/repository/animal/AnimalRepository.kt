@@ -12,4 +12,5 @@ interface AnimalRepository {
     suspend fun registerAnimal(animal: Animal): ResponseResult<Unit>
     suspend fun updateAnimal(animal: Animal): ResponseResult<Unit>
     suspend fun deleteAnimal(animalId: String): ResponseResult<Unit>
+    suspend fun updateGenealogy(genealogy: Genealogy): ResponseResult<Unit>
 }

@@ -38,7 +38,7 @@ fun SplashScreen(
         Icon(
             modifier = Modifier.size(150.dp),
             painter = painterResource(Res.drawable.icon),
-            tint = Color.White,
+            tint = HorseColor.accent,
             contentDescription = ""
         )
     }

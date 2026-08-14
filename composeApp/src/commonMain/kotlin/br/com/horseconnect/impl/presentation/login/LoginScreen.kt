@@ -9,7 +9,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun LoginScreen(
-    navigateToHome: (User) -> Unit
+    navigateToHome: (User) -> Unit,
+    navigateToSignUp: () -> Unit = {}
 ) {
     val loginViewModel = koinViewModel<LoginViewModel>()
     val loginViewState by loginViewModel.loginState.collectAsStateWithLifecycle()
@@ -21,7 +22,8 @@ internal fun LoginScreen(
         doLogin = {email, password ->
             loginViewModel.login(email, password)
         },
-        navigateToHome = navigateToHome
+        navigateToHome = navigateToHome,
+        navigateToSignUp = navigateToSignUp
     )
 }
 

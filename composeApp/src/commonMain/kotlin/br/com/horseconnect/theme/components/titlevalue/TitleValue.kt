@@ -7,8 +7,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import br.com.horseconnect.theme.color.HorseColor
 import br.com.horseconnect.theme.dimens.padding.Padding
 
 @Composable
@@ -20,7 +20,11 @@ fun TitleValue(
     Row(
         modifier = modifier.fillMaxWidth().padding(top = Padding.small)
     ) {
-        Text("$title:", style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold))
-        Text(" $value", style = MaterialTheme.typography.h6, color = Color.Gray)
+        Text(
+            "$title:",
+            style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Bold),
+            color = HorseColor.textPrimary
+        )
+        Text(" $value", style = MaterialTheme.typography.subtitle1, color = HorseColor.textSecondary)
     }
 }

@@ -39,9 +39,9 @@ import br.com.horseconnect.common.util.DateUtil
 import br.com.horseconnect.impl.domain.model.Animal
 import br.com.horseconnect.impl.domain.model.Owner
 import br.com.horseconnect.impl.presentation.animals.detail.AnimalDetailViewState
+import br.com.horseconnect.theme.HorseTheme
 import br.com.horseconnect.theme.color.HorseColor
 import br.com.horseconnect.theme.components.button.PrimaryButton
-import br.com.horseconnect.theme.components.button.SecondaryButton
 import br.com.horseconnect.theme.components.dialog.ConfirmAction
 import br.com.horseconnect.theme.components.dialog.CustomDialog
 import br.com.horseconnect.theme.components.dialog.DismissAction
@@ -51,6 +51,7 @@ import br.com.horseconnect.theme.components.loading.provider.LocalLoadingDialog
 import br.com.horseconnect.theme.components.titlevalue.TitleValue
 import br.com.horseconnect.theme.components.toolbar.Toolbar
 import br.com.horseconnect.theme.dimens.padding.Padding
+import br.com.horseconnect.theme.dimens.shape.Shape
 import coil3.compose.AsyncImage
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -122,6 +123,7 @@ fun AnimalDetailContent(
                 Text(
                     modifier = Modifier.weight(1f),
                     text = animal?.name.orEmpty(),
+                    color = HorseColor.textPrimary,
                     style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center
                 )
@@ -130,6 +132,7 @@ fun AnimalDetailContent(
                         animal?.let { navigateToEditAnimal.invoke(it) }
                     },
                     imageVector = Icons.Filled.Edit,
+                    tint = HorseColor.accent,
                     contentDescription = "Editar"
                 )
             }
@@ -139,8 +142,8 @@ fun AnimalDetailContent(
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .fillMaxHeight(0.3f)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colors.onSurface.copy(alpha = 0.1f))
+                    .clip(Shape.medium)
+                    .background(HorseColor.surfaceVariant)
             )
             TitleValue("Nascimento", value = DateUtil.getDateFormatter(animal?.birthDate.orEmpty()))
             TitleValue("Sexo", value = animal?.sex.orEmpty())
@@ -162,9 +165,9 @@ fun AnimalDetailContent(
                     text = "Excluir animal",
                     modifier = Modifier
                         .clickable { showDeleteDialog = true }
-                        .padding(8.dp),
+                        .padding(Padding.medium),
                     style = TextStyle(
-                        color = Color.Red,
+                        color = HorseColor.error,
                         textDecoration = TextDecoration.Underline
                     )
                 )
@@ -209,14 +212,16 @@ private fun Owners(owners: List<Owner>) {
 @Preview
 @Composable
 private fun AnimalDetailContentPreview() {
-    AnimalDetailContent(
-        viewState = AnimalDetailViewState.Populated(
-            Animal.mock
-        ),
-        getCurrentAnimal = {},
-        popBackStack = {},
-        navigateToGenealogy = { _, _ -> },
-        deleteAnimal = {},
-        navigateToEditAnimal = {}
-    )
+    HorseTheme {
+        AnimalDetailContent(
+            viewState = AnimalDetailViewState.Populated(
+                Animal.mock
+            ),
+            getCurrentAnimal = {},
+            popBackStack = {},
+            navigateToGenealogy = { _, _ -> },
+            deleteAnimal = {},
+            navigateToEditAnimal = {}
+        )
+    }
 }

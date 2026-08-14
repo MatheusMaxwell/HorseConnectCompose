@@ -7,4 +7,5 @@ object Padding {
     val small: Dp = 4.dp
     val medium: Dp = 10.dp
     val large: Dp = 16.dp
+    val x2Large: Dp = 24.dp
 }

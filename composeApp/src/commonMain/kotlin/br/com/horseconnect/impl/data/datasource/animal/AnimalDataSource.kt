@@ -2,6 +2,7 @@ package br.com.horseconnect.impl.data.datasource.animal
 
 import br.com.horseconnect.common.result.ResponseResult
 import br.com.horseconnect.impl.data.model.AnimalData
+import br.com.horseconnect.impl.data.model.GenealogyData
 import br.com.horseconnect.impl.domain.model.Animal
 import br.com.horseconnect.impl.domain.model.Genealogy
 
@@ -13,4 +14,5 @@ interface AnimalDataSource {
     suspend fun registerAnimal(animal: AnimalData): ResponseResult<Unit>
     suspend fun updateAnimal(animal: AnimalData, animalId: String): ResponseResult<Unit>
     suspend fun deleteAnimal(animalId: String): ResponseResult<Unit>
+    suspend fun updateGenealogy(genealogy: GenealogyData, animalId: String): ResponseResult<Unit>
 }

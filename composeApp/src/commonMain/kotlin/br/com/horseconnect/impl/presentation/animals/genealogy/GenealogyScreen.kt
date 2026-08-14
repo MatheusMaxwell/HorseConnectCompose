@@ -23,6 +23,7 @@ fun GenealogyScreen(
     GenealogyContent(
         viewState = viewState,
         animalName = animalName,
-        popBackStack = popBackStack
+        popBackStack = popBackStack,
+        onSave = viewModel::updateGenealogy
     )
 }

@@ -1,5 +1,7 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -44,6 +46,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
+            implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -62,7 +65,6 @@ kotlin {
             implementation(libs.skiko)
             implementation(libs.coil.compose)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.coil.network.ktor2)
             implementation(libs.coil.network.ktor3)
             implementation(libs.peekaboo.image.picker)
         }

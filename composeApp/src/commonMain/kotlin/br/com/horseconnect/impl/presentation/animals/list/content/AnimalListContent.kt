@@ -1,5 +1,6 @@
 package br.com.horseconnect.impl.presentation.animals.list.content
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,21 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,31 +30,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import br.com.horseconnect.common.toastprovider.LocalToasterDialog
 import br.com.horseconnect.common.util.DateUtil
+import br.com.horseconnect.common.viewstate.BaseViewState
 import br.com.horseconnect.impl.domain.model.Animal
 import br.com.horseconnect.impl.domain.model.AnimalType
-import br.com.horseconnect.impl.presentation.animals.list.AnimalsViewState
+import br.com.horseconnect.theme.HorseTheme
 import br.com.horseconnect.theme.color.HorseColor
 import br.com.horseconnect.theme.components.loading.LoadingDialogManager
+import br.com.horseconnect.theme.components.searchbar.SearchBar
 import br.com.horseconnect.theme.components.toolbar.Toolbar
+import br.com.horseconnect.theme.dimens.fontsize.FontSize
 import br.com.horseconnect.theme.dimens.padding.Padding
+import br.com.horseconnect.theme.dimens.shape.Shape
+import br.com.horseconnect.theme.dimens.size.CustomSize
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
-import horseconnect.composeapp.generated.resources.Res
-import horseconnect.composeapp.generated.resources.baseline_arrow_back_24
-import horseconnect.composeapp.generated.resources.baseline_delete_24
-import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun AnimalListContent(
-    viewState: AnimalsViewState,
+    viewState: BaseViewState<List<Animal>>,
     loadingDialogManager: LoadingDialogManager,
     onSearchQueryChanged: (String) -> Unit,
     onTypeFilterChanged: (AnimalType?) -> Unit,
@@ -71,20 +63,21 @@ fun AnimalListContent(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedType by remember { mutableStateOf<AnimalType?>(null) }
+    var filterExpanded by remember { mutableStateOf(false) }
     var animals: List<Animal> by remember{ mutableStateOf(emptyList()) }
     val toaster = LocalToasterDialog.current
 
     LaunchedEffect(viewState) {
         when(viewState) {
-            AnimalsViewState.Initial -> Unit
-            AnimalsViewState.Loading -> {
+            BaseViewState.Initial -> Unit
+            BaseViewState.Loading -> {
                 loadingDialogManager.show()
             }
-            is AnimalsViewState.Populated -> {
+            is BaseViewState.Populated -> {
                 loadingDialogManager.hide()
                 animals = viewState.data
             }
-            is AnimalsViewState.Error -> {
+            is BaseViewState.Error -> {
                 loadingDialogManager.hide()
                 toaster.show(viewState.msg)
             }
@@ -105,127 +98,67 @@ fun AnimalListContent(
                 onClick = {
                     navigateToRegister.invoke()
                 },
-                backgroundColor = HorseColor.primary,
-                contentColor = Color.White
+                backgroundColor = HorseColor.accent,
+                contentColor = HorseColor.onAccent
             ) {
                 Text("+", style = MaterialTheme.typography.h6)
             }
         },
         backgroundColor = HorseColor.background
     ) {
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-            // Barra de Busca
-            SearchBar(query = searchQuery, onQueryChanged = {
-                searchQuery = it
-                onSearchQueryChanged(it)
-            })
+        Column(modifier = Modifier.fillMaxSize().padding(Padding.large)) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                SearchBar(
+                    query = searchQuery,
+                    onQueryChanged = {
+                        searchQuery = it
+                        onSearchQueryChanged(it)
+                    },
+                    onFilterClick = { filterExpanded = !filterExpanded }
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Filtro de Tipo de Animal (Dropdown)
-            AnimalTypeFilter(selectedType = selectedType, onTypeSelected = { selected ->
-                selected.let {
-                    selectedType = it
-                    onTypeFilterChanged(it)
+                DropdownMenu(
+                    expanded = filterExpanded,
+                    onDismissRequest = { filterExpanded = false }
+                ) {
+                    DropdownMenuItem(onClick = {
+                        selectedType = null
+                        onTypeFilterChanged(null)
+                        filterExpanded = false
+                    }) {
+                        Text("Todos", color = HorseColor.textPrimary)
+                    }
+                    AnimalType.entries.forEach { type ->
+                        DropdownMenuItem(onClick = {
+                            selectedType = type
+                            onTypeFilterChanged(type)
+                            filterExpanded = false
+                        }) {
+                            Text(type.value, color = HorseColor.textPrimary)
+                        }
+                    }
                 }
-            })
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Padding.large))
 
-            // Lista de Animais
             val filteredAnimals = animals.filter { animal ->
                 (searchQuery.isEmpty() || animal.name.contains(searchQuery, ignoreCase = true)) &&
                         (selectedType == null || animal.types.contains(selectedType))
             }
 
-            Text("${filteredAnimals.size} animais")
+            Text(
+                text = "${filteredAnimals.size} animais",
+                color = HorseColor.textSecondary,
+                style = TextStyle(fontSize = FontSize.ultraSmall)
+            )
+
+            Spacer(modifier = Modifier.height(Padding.small))
 
             LazyColumn {
                 items(filteredAnimals) { animal ->
                     AnimalListItem(animal) {
                         onItemClick.invoke(it)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun SearchBar(query: String, onQueryChanged: (String) -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        elevation = 6.dp,
-        shape = RoundedCornerShape(10.dp),
-        backgroundColor = Color.White
-    ) {
-        TextField(
-            value = query,
-            onValueChange = onQueryChanged,
-            label = { Text("Buscar") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "Buscar")
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.White,
-                cursorColor = Color.Black,
-                focusedIndicatorColor = Color.Black,
-                unfocusedIndicatorColor = Color.Transparent,
-                textColor = Color.Black,
-                focusedLabelColor = Color.Black
-            )
-        )
-    }
-}
-
-@Composable
-fun AnimalTypeFilter(
-    selectedType: AnimalType?,
-    onTypeSelected: (AnimalType?) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val types = AnimalType.entries
-
-    Column {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Row {
-                OutlinedButton(
-                    onClick = { expanded = !expanded },
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text(selectedType?.value ?: "Filtrar", style = TextStyle(color = Color.Black))
-                }
-                if (selectedType?.value != null) {
-                    OutlinedButton(
-                        modifier = Modifier.padding(start = Padding.small),
-                        onClick = { onTypeSelected.invoke(null) },
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(18.dp),
-                            painter = painterResource(Res.drawable.baseline_delete_24),
-                            contentDescription = "",
-                            tint = Color.Black
-                        )
-                    }
-                }
-            }
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                types.forEach { type ->
-                    DropdownMenuItem(onClick = {
-                        onTypeSelected(type)
-                        expanded = false
-                    }) {
-                        Text(type.value, style = TextStyle(color = Color.Black))
                     }
                 }
             }
@@ -241,27 +174,55 @@ fun AnimalListItem(animal: Animal, onItemClick: (animalId: String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = Padding.small)
             .clickable { onItemClick.invoke(animal.id) },
-        elevation = 6.dp,
-        shape = RoundedCornerShape(10.dp)
+        elevation = 0.dp,
+        shape = Shape.medium,
+        backgroundColor = HorseColor.surface,
+        border = BorderStroke(CustomSize.borderThin, HorseColor.border)
     ) {
-        Row(modifier = Modifier.padding(16.dp)) {
-            // Imagem do Animal
+        Row(modifier = Modifier.padding(Padding.large)) {
             AsyncImage(
                 model = animal.imageUrl,
                 contentDescription = animal.name,
                 contentScale = ContentScale.FillBounds,
-                modifier = Modifier.size(80.dp).clip(RoundedCornerShape(10.dp)).background(MaterialTheme.colors.onSurface.copy(alpha = 0.1f))
+                modifier = Modifier
+                    .size(CustomSize.animalCardImageSize)
+                    .clip(Shape.small)
+                    .background(HorseColor.surfaceVariant)
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(Padding.large))
 
             Column {
-                Text(animal.name, style = MaterialTheme.typography.h6)
-                Text("$years anos e $month meses", style = MaterialTheme.typography.body2)
-                Text("${DateUtil.getMonthsAge(animal.birthDate)} meses", style = MaterialTheme.typography.body2)
+                Text(animal.name, color = HorseColor.textPrimary, style = MaterialTheme.typography.h6)
+                Text(
+                    "$years anos e $month meses",
+                    color = HorseColor.textSecondary,
+                    style = MaterialTheme.typography.body2
+                )
+                Text(
+                    "${DateUtil.getMonthsAge(animal.birthDate)} meses",
+                    color = HorseColor.textSecondary,
+                    style = MaterialTheme.typography.body2
+                )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun AnimalListContentPreview() {
+    HorseTheme {
+        AnimalListContent(
+            viewState = BaseViewState.Populated(listOf(Animal.mock, Animal.mock)),
+            loadingDialogManager = LoadingDialogManager(),
+            onSearchQueryChanged = {},
+            onTypeFilterChanged = {},
+            onItemClick = {},
+            popBackStack = {},
+            navigateToRegister = {}
+        )
     }
 }

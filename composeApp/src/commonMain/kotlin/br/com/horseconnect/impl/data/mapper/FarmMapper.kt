@@ -13,8 +13,6 @@ fun FarmData.toDomain(): Farm {
         state = state,
         country = country,
         creation = creation,
-        imageLogoUrl = imageLogoUrl,
-        primaryColor = primaryColor,
         proprietaryId = proprietaryId
     )
 }

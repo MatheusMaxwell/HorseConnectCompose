@@ -5,7 +5,6 @@ import br.com.horseconnect.common.ext.toGenericError
 import br.com.horseconnect.common.result.ResponseResult
 import br.com.horseconnect.impl.data.mapper.toDomain
 import br.com.horseconnect.impl.data.model.AnimalData
-import br.com.horseconnect.impl.data.model.FarmData
 import br.com.horseconnect.impl.data.model.GenealogyData
 import br.com.horseconnect.impl.domain.model.Animal
 import br.com.horseconnect.impl.domain.model.Genealogy
@@ -101,6 +100,15 @@ class AnimalDataSourceImpl : AnimalDataSource {
     override suspend fun deleteAnimal(animalId: String): ResponseResult<Unit> {
         return try {
             db.collection(ANIMALS_COLLECTION).document(animalId).delete()
+            ResponseResult.Success(Unit)
+        } catch (e: Exception) {
+            ResponseResult.Error(e.toGenericError())
+        }
+    }
+
+    override suspend fun updateGenealogy(genealogy: GenealogyData, animalId: String): ResponseResult<Unit> {
+        return try {
+            db.collection(GENEALOGY_COLLECTION).document(animalId).set(genealogy)
             ResponseResult.Success(Unit)
         } catch (e: Exception) {
             ResponseResult.Error(e.toGenericError())

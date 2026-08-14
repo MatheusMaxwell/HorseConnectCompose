@@ -10,13 +10,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import br.com.horseconnect.theme.components.button.PrimaryButton
-import br.com.horseconnect.theme.components.button.SecondaryButton
+import br.com.horseconnect.theme.HorseTheme
+import br.com.horseconnect.theme.color.HorseColor
 import br.com.horseconnect.theme.dimens.padding.Padding
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -32,11 +30,12 @@ fun CustomDialog(
     if (visible) {
         AlertDialog(
             onDismissRequest = dismissAction.onClick,
+            backgroundColor = HorseColor.surface,
             title = {
-                Text(text = title, style = TextStyle(fontWeight = FontWeight.Bold))
+                Text(text = title, color = HorseColor.textPrimary, style = TextStyle(fontWeight = FontWeight.Bold))
             },
             text = {
-                Text(message)
+                Text(message, color = HorseColor.textSecondary)
             },
             buttons = {
                 Row(
@@ -45,7 +44,7 @@ fun CustomDialog(
                 ) {
                     Text(
                         text = dismissAction.text,
-                        color = Color.Red,
+                        color = HorseColor.error,
                         modifier = Modifier.clickable {
                             dismissAction.onClick()
                             onDismiss.invoke()
@@ -54,6 +53,7 @@ fun CustomDialog(
                     Spacer(modifier = Modifier.width(Padding.large))
                     Text(
                         text = confirmAction.text,
+                        color = HorseColor.accent,
                         modifier = Modifier.clickable {
                             confirmAction.onClick()
                             onDismiss.invoke()
@@ -78,18 +78,20 @@ data class DismissAction(
 @Preview
 @Composable
 private fun CustomDialogPreview() {
-    CustomDialog(
-        visible = true,
-        title = "Title",
-        message = "Message",
-        confirmAction = ConfirmAction(
-            text = "Confirm",
-            onClick = {}
-        ),
-        dismissAction = DismissAction(
-            text = "Dismiss",
-            onClick = {}
-        ),
-        onDismiss = {}
-    )
+    HorseTheme {
+        CustomDialog(
+            visible = true,
+            title = "Title",
+            message = "Message",
+            confirmAction = ConfirmAction(
+                text = "Confirm",
+                onClick = {}
+            ),
+            dismissAction = DismissAction(
+                text = "Dismiss",
+                onClick = {}
+            ),
+            onDismiss = {}
+        )
+    }
 }

@@ -2,6 +2,7 @@ package br.com.horseconnect.theme.components.loading.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -23,9 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import br.com.horseconnect.theme.HorseTheme
 import br.com.horseconnect.theme.components.loading.LoadingDialogManager
 import br.com.horseconnect.theme.color.HorseColor
 import br.com.horseconnect.theme.dimens.padding.Padding
+import br.com.horseconnect.theme.dimens.shape.Shape
 import br.com.horseconnect.theme.dimens.size.CustomSize
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -50,8 +52,13 @@ internal fun LoadingDialogComponent(
                     )
                     .width(CustomSize.loadingDialogWidth)
                     .background(
-                        color = Color.White,
-                        shape = MaterialTheme.shapes.medium
+                        color = HorseColor.surface,
+                        shape = Shape.medium
+                    )
+                    .border(
+                        width = CustomSize.borderThin,
+                        color = HorseColor.border,
+                        shape = Shape.medium
                     )
                     .padding(top = Padding.medium),
                 verticalArrangement = Arrangement.Center,
@@ -66,7 +73,7 @@ internal fun LoadingDialogComponent(
 
 @Composable
 private fun BaseCircularProgress(
-    color: Color = HorseColor.primary
+    color: Color = HorseColor.accent
 ) {
     CircularProgressIndicator(
         modifier = Modifier
@@ -93,14 +100,16 @@ private fun BaseProgressText(text: String) {
             .padding(Padding.medium),
         text = text,
         textAlign = TextAlign.Center,
-        color = Color.Gray
+        color = HorseColor.textSecondary
     )
 }
 
 @Preview
 @Composable
 private fun LoadingDialogComponentPreview() {
-    LoadingDialogComponent(
-        loadingManager = LoadingDialogManager(visible = mutableStateOf(true))
-    )
+    HorseTheme {
+        LoadingDialogComponent(
+            loadingManager = LoadingDialogManager(visible = mutableStateOf(true))
+        )
+    }
 }
